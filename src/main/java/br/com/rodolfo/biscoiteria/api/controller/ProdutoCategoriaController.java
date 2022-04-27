@@ -45,13 +45,13 @@ public class ProdutoCategoriaController {
         return cadastroProdutoCategoriaService.salvar(produtoCategoria);
     }
 
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void excluir(@PathVariable("id") Long id) {
         cadastroProdutoCategoriaService.excluir(id);
     }
 
-    @PutMapping("{id}")
+    @PutMapping("/{id}")
     public ProdutoCategoria atualizar(
         @PathVariable("id") Long id,
         @RequestBody ProdutoCategoria produtoCategoria
