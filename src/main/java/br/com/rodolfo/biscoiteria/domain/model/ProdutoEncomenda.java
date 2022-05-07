@@ -11,6 +11,8 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import org.hibernate.annotations.CreationTimestamp;
 
 import lombok.Data;
@@ -36,6 +38,7 @@ public class ProdutoEncomenda {
     @Column(columnDefinition = "datetime")
     private LocalDateTime dataCadastro;
 
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;

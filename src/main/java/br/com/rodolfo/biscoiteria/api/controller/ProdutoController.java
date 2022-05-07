@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import br.com.rodolfo.biscoiteria.domain.model.Produto;
+import br.com.rodolfo.biscoiteria.domain.model.dto.ProdutoDTO;
 import br.com.rodolfo.biscoiteria.domain.repository.ProdutoRepository;
 import br.com.rodolfo.biscoiteria.domain.service.CadastroProdutoService;
 
@@ -35,8 +36,8 @@ public class ProdutoController {
     }
 
     @GetMapping("/{id}")
-    public Produto buscar(@PathVariable("id") Long id) {
-        return cadastroProdutoService.buscarOuFalhar(id);
+    public ProdutoDTO buscar(@PathVariable("id") Long id) {
+        return cadastroProdutoService.buscarOuFalharDTO(id);
     }
 
     @PostMapping

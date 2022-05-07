@@ -26,7 +26,7 @@ public class CadastroProdutoCategoriaService {
         try {
             produtoCategoriaRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new EmptyResultDataAccessException(MSG_CATEGORIA_NAO_ENCONTRADA, 1);
+            throw new EmptyResultDataAccessException(String.format(MSG_CATEGORIA_NAO_ENCONTRADA, 1), 1);
         } catch (DataIntegrityViolationException e) {
             throw new DataIntegrityViolationException(
                 String.format("Categoria de código %d não pode ser removida, pois está em uso", id));
