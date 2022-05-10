@@ -28,7 +28,7 @@ public class ProdutoEncomendaController {
     private CadastroProdutoEncomenda cadastroProdutoEncomenda;
 
     @GetMapping("/por-id-produto/{id}")
-    public List<EncomendaDTO> listarByIdProduto(@PathVariable("id") Long idProduto) {
+    public List<EncomendaDTO> listarEncomendasPorIdProduto(@PathVariable("id") Long idProduto) {
         return cadastroProdutoEncomenda.listarEncomendasPorIdProduto(idProduto);
     }
 

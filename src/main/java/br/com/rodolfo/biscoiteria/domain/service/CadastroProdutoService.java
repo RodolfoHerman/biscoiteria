@@ -1,13 +1,13 @@
 package br.com.rodolfo.biscoiteria.domain.service;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.rodolfo.biscoiteria.core.mappers.ProdutoMapper;
+import br.com.rodolfo.biscoiteria.domain.exception.ProdutoEmUsoException;
+import br.com.rodolfo.biscoiteria.domain.exception.ProdutoNaoEncontradoException;
 import br.com.rodolfo.biscoiteria.domain.model.Produto;
 import br.com.rodolfo.biscoiteria.domain.model.ProdutoCategoria;
 import br.com.rodolfo.biscoiteria.domain.model.dto.ProdutoDTO;
@@ -15,8 +15,6 @@ import br.com.rodolfo.biscoiteria.domain.repository.ProdutoRepository;
 
 @Service
 public class CadastroProdutoService {
-
-    private static final String MSG_PRODUTO_NAO_ENCONTRADO = "Produto de código '%s' não encontrado.";
 
     @Autowired
     private ProdutoRepository produtoRepository;
@@ -41,24 +39,20 @@ public class CadastroProdutoService {
         try {
             produtoRepository.deleteById(id);
         } catch (EmptyResultDataAccessException e) {
-            throw new EmptyResultDataAccessException(String.format(MSG_PRODUTO_NAO_ENCONTRADO, 1), 1);
+            throw new ProdutoNaoEncontradoException(id);
         } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityViolationException(
-                String.format("Produto de código %d não pode ser removido, pois está em uso", id));
+            throw new ProdutoEmUsoException(id);
         }
     }
 
     public ProdutoDTO buscarOuFalharDTO(Long id) {
-        Produto produto = produtoRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(
-                String.format(MSG_PRODUTO_NAO_ENCONTRADO, id)));
+        Produto produto = buscarOuFalhar(id);
 
         return produtoMapper.toProdutoDTO(produto);
     }
 
     public Produto buscarOuFalhar(Long id) {
         return produtoRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(
-                String.format(MSG_PRODUTO_NAO_ENCONTRADO, id)));
+            .orElseThrow(() -> new ProdutoNaoEncontradoException(id));
     }
 }

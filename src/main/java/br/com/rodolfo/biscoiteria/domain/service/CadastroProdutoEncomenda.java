@@ -3,14 +3,13 @@ package br.com.rodolfo.biscoiteria.domain.service;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import javax.persistence.EntityNotFoundException;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
 import br.com.rodolfo.biscoiteria.core.mappers.EncomendaMapper;
 import br.com.rodolfo.biscoiteria.core.mappers.ProdutoEncomendaMapper;
+import br.com.rodolfo.biscoiteria.domain.exception.ProdutoEncomendaNaoEncontradoException;
 import br.com.rodolfo.biscoiteria.domain.model.Produto;
 import br.com.rodolfo.biscoiteria.domain.model.ProdutoEncomenda;
 import br.com.rodolfo.biscoiteria.domain.model.dto.EncomendaDTO;
@@ -18,8 +17,6 @@ import br.com.rodolfo.biscoiteria.domain.repository.ProdutoEncomendaRepository;
 
 @Service
 public class CadastroProdutoEncomenda {
-
-    private static final String MSG_ENCOMENDA_NAO_ENCONTRADO = "Encomenda de código '%s' não encontrada.";
 
     @Autowired
     private ProdutoEncomendaRepository produtoEncomendaRepository;
@@ -49,7 +46,7 @@ public class CadastroProdutoEncomenda {
         try {
             produtoEncomendaRepository.deleteById(id);
         } catch (EmptyResultDataAccessException ex) {
-            throw new EmptyResultDataAccessException(String.format(MSG_ENCOMENDA_NAO_ENCONTRADO, id), 1);
+            throw new ProdutoEncomendaNaoEncontradoException(id);
         }
     }
 
@@ -61,7 +58,6 @@ public class CadastroProdutoEncomenda {
 
     public ProdutoEncomenda buscarOuFalhar(Long id) {
         return produtoEncomendaRepository.findById(id)
-            .orElseThrow(() -> new EntityNotFoundException(
-                String.format(MSG_ENCOMENDA_NAO_ENCONTRADO, id)));
+            .orElseThrow(() -> new ProdutoEncomendaNaoEncontradoException(id));
     }
 }
