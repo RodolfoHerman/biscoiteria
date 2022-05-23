@@ -1,18 +1,14 @@
 package br.com.rodolfo.biscoiteria.domain.service;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import br.com.rodolfo.biscoiteria.core.mappers.EncomendaMapper;
-import br.com.rodolfo.biscoiteria.core.mappers.ProdutoEncomendaMapper;
 import br.com.rodolfo.biscoiteria.domain.exception.ProdutoEncomendaNaoEncontradoException;
 import br.com.rodolfo.biscoiteria.domain.model.Produto;
 import br.com.rodolfo.biscoiteria.domain.model.ProdutoEncomenda;
-import br.com.rodolfo.biscoiteria.domain.model.dto.EncomendaDTO;
 import br.com.rodolfo.biscoiteria.domain.repository.ProdutoEncomendaRepository;
 
 @Service
@@ -24,21 +20,13 @@ public class CadastroProdutoEncomenda {
     @Autowired
     private CadastroProdutoService cadastroProdutoService;
 
-    @Autowired
-    private ProdutoEncomendaMapper produtoEncomendaMapper;
-
-    @Autowired
-    private EncomendaMapper encomendaMapper;
-
     public ProdutoEncomenda salvar(ProdutoEncomenda produtoEncomenda) {
-        return salvar(produtoEncomendaMapper.toEncomenda(produtoEncomenda));
-    }
+        Long idProduto = produtoEncomenda.getProduto().getId();
 
-    public ProdutoEncomenda salvar(EncomendaDTO encomenda) {
-        Produto produto = cadastroProdutoService.buscarOuFalhar(encomenda.getIdProduto());
+        Produto produto = cadastroProdutoService.buscarOuFalhar(idProduto);
 
-        ProdutoEncomenda produtoEncomenda = encomendaMapper.toProdutoEncomenda(encomenda, produto);
-
+        produtoEncomenda.setProduto(produto);
+        
         return produtoEncomendaRepository.save(produtoEncomenda);
     }
 
@@ -50,10 +38,8 @@ public class CadastroProdutoEncomenda {
         }
     }
 
-    public List<EncomendaDTO> listarEncomendasPorIdProduto(Long idProduto) {
-        return produtoEncomendaRepository.findByProduto_id(idProduto)
-            .stream().map(produtoEncomendaMapper::toEncomenda)
-            .collect(Collectors.toList());
+    public List<ProdutoEncomenda> listarEncomendasPorIdProduto(Long idProduto) {
+        return produtoEncomendaRepository.findByProduto_id(idProduto);
     }
 
     public ProdutoEncomenda buscarOuFalhar(Long id) {

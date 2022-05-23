@@ -1,6 +1,6 @@
 package br.com.rodolfo.biscoiteria.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +42,7 @@ public class Usuario {
 
     @CreationTimestamp
     @Column(columnDefinition = "datetime")
-    private LocalDateTime dataCadastro;
+    private OffsetDateTime dataCadastro;
 
     @ManyToMany
     @JoinTable(name = "usuario_grupo",

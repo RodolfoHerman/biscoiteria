@@ -5,12 +5,10 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
 
-import br.com.rodolfo.biscoiteria.core.mappers.ProdutoMapper;
 import br.com.rodolfo.biscoiteria.domain.exception.ProdutoEmUsoException;
 import br.com.rodolfo.biscoiteria.domain.exception.ProdutoNaoEncontradoException;
 import br.com.rodolfo.biscoiteria.domain.model.Produto;
 import br.com.rodolfo.biscoiteria.domain.model.ProdutoCategoria;
-import br.com.rodolfo.biscoiteria.domain.model.dto.ProdutoDTO;
 import br.com.rodolfo.biscoiteria.domain.repository.ProdutoRepository;
 
 @Service
@@ -21,9 +19,6 @@ public class CadastroProdutoService {
 
     @Autowired
     private CadastroProdutoCategoriaService cadastroProdutoCategoriaService;
-
-    @Autowired
-    private ProdutoMapper produtoMapper;
 
     public Produto salvar(Produto produto) {
         Long idCategoria = produto.getCategoria().getId();
@@ -43,12 +38,6 @@ public class CadastroProdutoService {
         } catch (DataIntegrityViolationException e) {
             throw new ProdutoEmUsoException(id);
         }
-    }
-
-    public ProdutoDTO buscarOuFalharDTO(Long id) {
-        Produto produto = buscarOuFalhar(id);
-
-        return produtoMapper.toProdutoDTO(produto);
     }
 
     public Produto buscarOuFalhar(Long id) {

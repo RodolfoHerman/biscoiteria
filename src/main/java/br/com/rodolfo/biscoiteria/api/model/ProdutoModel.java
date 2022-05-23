@@ -1,6 +1,10 @@
-package br.com.rodolfo.biscoiteria.domain.model.dto;
+package br.com.rodolfo.biscoiteria.api.model;
 
 import java.math.BigDecimal;
+
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
 import br.com.rodolfo.biscoiteria.domain.model.ProdutoCategoria;
 import br.com.rodolfo.biscoiteria.domain.model.ProdutoEncomenda;
@@ -9,7 +13,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ProdutoDTO {
+@JsonInclude(Include.NON_NULL)
+public class ProdutoModel {
 
     private Long id;
 
@@ -23,5 +28,6 @@ public class ProdutoDTO {
 
     private ProdutoCategoria categoria;
 
+    @JsonIgnoreProperties("produto")
     private ProdutoEncomenda encomenda;
 }

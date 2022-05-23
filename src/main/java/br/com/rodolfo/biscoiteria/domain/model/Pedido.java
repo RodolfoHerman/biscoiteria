@@ -1,6 +1,6 @@
 package br.com.rodolfo.biscoiteria.domain.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -34,11 +34,11 @@ public class Pedido {
 
     @CreationTimestamp
     @Column(nullable = false)
-    private LocalDateTime dataCriacao;
+    private OffsetDateTime dataCriacao;
 
-    private LocalDateTime dataCancelamento;
+    private OffsetDateTime dataCancelamento;
 
-    private LocalDateTime dataPagamento;
+    private OffsetDateTime dataPagamento;
 
     @ManyToOne
     @JoinColumn(name = "usuario_cliente_id", nullable = false)

@@ -1,6 +1,6 @@
 package br.com.rodolfo.biscoiteria.api.exceptionhandler;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -19,5 +19,5 @@ public class Problem {
     private String detail;
 
     private String userMessage;
-    private LocalDateTime timestamp;
+    private OffsetDateTime timestamp;
 }

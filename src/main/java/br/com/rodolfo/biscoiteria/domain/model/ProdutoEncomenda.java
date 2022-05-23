@@ -1,7 +1,7 @@
 package br.com.rodolfo.biscoiteria.domain.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -10,8 +10,6 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import org.hibernate.annotations.CreationTimestamp;
 
@@ -36,9 +34,8 @@ public class ProdutoEncomenda {
 
     @CreationTimestamp
     @Column(columnDefinition = "datetime")
-    private LocalDateTime dataCadastro;
+    private OffsetDateTime dataCadastro;
 
-    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;
