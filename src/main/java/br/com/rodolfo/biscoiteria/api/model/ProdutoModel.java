@@ -6,8 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
-import br.com.rodolfo.biscoiteria.domain.model.ProdutoCategoria;
-import br.com.rodolfo.biscoiteria.domain.model.ProdutoEncomenda;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -26,8 +24,8 @@ public class ProdutoModel {
 
     private boolean ativo;
 
-    private ProdutoCategoria categoria;
+    private ProdutoCategoriaModel categoria;
 
     @JsonIgnoreProperties("produto")
-    private ProdutoEncomenda encomenda;
+    private ProdutoEncomendaModel encomenda;
 }

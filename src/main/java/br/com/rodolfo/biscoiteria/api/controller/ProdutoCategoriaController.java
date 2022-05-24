@@ -1,6 +1,7 @@
 package br.com.rodolfo.biscoiteria.api.controller;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.rodolfo.biscoiteria.api.model.ProdutoCategoriaModel;
+import br.com.rodolfo.biscoiteria.core.mappers.ProdutoCategoriaMapper;
 import br.com.rodolfo.biscoiteria.domain.model.ProdutoCategoria;
 import br.com.rodolfo.biscoiteria.domain.repository.ProdutoCategoriaRepository;
 import br.com.rodolfo.biscoiteria.domain.service.CadastroProdutoCategoriaService;
@@ -29,20 +32,25 @@ public class ProdutoCategoriaController {
     @Autowired
     private CadastroProdutoCategoriaService cadastroProdutoCategoriaService;
 
+    @Autowired
+    private ProdutoCategoriaMapper produtoCategoriaMapper;
+
     @GetMapping
-    public List<ProdutoCategoria> listar() {
-        return produtoCategoriaRepository.findAll();
+    public List<ProdutoCategoriaModel> listar() {
+        return produtoCategoriaRepository.findAll().stream()
+            .map(produtoCategoriaMapper::toProdutoCategoriaModel)
+            .collect(Collectors.toList());
     }
 
     @GetMapping("/{id}")
-    public ProdutoCategoria buscar(@PathVariable("id") Long id) {
-        return cadastroProdutoCategoriaService.buscarOuFalhar(id);
+    public ProdutoCategoriaModel buscar(@PathVariable("id") Long id) {
+        return produtoCategoriaMapper.toProdutoCategoriaModel(cadastroProdutoCategoriaService.buscarOuFalhar(id));
     }
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ProdutoCategoria salvar(@RequestBody ProdutoCategoria produtoCategoria) {
-        return cadastroProdutoCategoriaService.salvar(produtoCategoria);
+    public ProdutoCategoriaModel salvar(@RequestBody ProdutoCategoria produtoCategoria) {
+        return produtoCategoriaMapper.toProdutoCategoriaModel(cadastroProdutoCategoriaService.salvar(produtoCategoria));
     }
 
     @DeleteMapping("/{id}")
@@ -52,7 +60,7 @@ public class ProdutoCategoriaController {
     }
 
     @PutMapping("/{id}")
-    public ProdutoCategoria atualizar(
+    public ProdutoCategoriaModel atualizar(
         @PathVariable("id") Long id,
         @RequestBody ProdutoCategoria produtoCategoria
     ) {
@@ -60,6 +68,6 @@ public class ProdutoCategoriaController {
 
         BeanUtils.copyProperties(produtoCategoria, produtoCategoriaSalvo, "id");
 
-        return cadastroProdutoCategoriaService.salvar(produtoCategoriaSalvo);
+        return produtoCategoriaMapper.toProdutoCategoriaModel(cadastroProdutoCategoriaService.salvar(produtoCategoriaSalvo));
     }
 }
