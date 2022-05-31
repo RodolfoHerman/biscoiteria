@@ -10,9 +10,15 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import br.com.rodolfo.biscoiteria.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -26,9 +32,13 @@ public class ProdutoEncomenda {
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotNull
+    @Positive
     @Column(nullable = false)
     private Integer quantidade;
 
+    @NotNull
+    @Positive
     @Column(nullable = false)
     private BigDecimal precoCompra;
 
@@ -36,6 +46,9 @@ public class ProdutoEncomenda {
     @Column(columnDefinition = "datetime")
     private OffsetDateTime dataCadastro;
 
+    @Valid
+    @NotNull
+    @ConvertGroup(from = Default.class, to = Groups.ProdutoId.class)
     @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;

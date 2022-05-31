@@ -13,7 +13,14 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
+import javax.validation.Valid;
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Positive;
+import javax.validation.groups.ConvertGroup;
+import javax.validation.groups.Default;
 
+import br.com.rodolfo.biscoiteria.core.validation.Groups;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -23,25 +30,33 @@ import lombok.EqualsAndHashCode;
 public class Produto {
 
     @Id
+    @NotNull(groups = Groups.ProdutoId.class)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @EqualsAndHashCode.Include
     private Long id;
 
+    @NotBlank
     @Column(nullable = false)
     private String nome;
 
+    @NotBlank
     @Column(nullable = false)
     private String descricao;
 
     // @Column(nullable = false)
     // private Integer quantidadeEstoque;
 
+    @NotNull
+    @Positive
     @Column(nullable = false)
     private BigDecimal precoVenda;
 
     @Column(nullable = false)
     private boolean ativo;
 
+    @Valid
+    @NotNull
+    @ConvertGroup(from = Default.class, to = Groups.CategoriaId.class)
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "categoria_id", nullable = false)
     private ProdutoCategoria categoria;

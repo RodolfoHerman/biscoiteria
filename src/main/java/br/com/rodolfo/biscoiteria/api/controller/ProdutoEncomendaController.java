@@ -3,6 +3,8 @@ package br.com.rodolfo.biscoiteria.api.controller;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -42,14 +44,14 @@ public class ProdutoEncomendaController {
 
     @PostMapping
     @ResponseStatus(value = HttpStatus.CREATED)
-    public ProdutoEncomendaModel salvar(@RequestBody ProdutoEncomenda encomenda) {
+    public ProdutoEncomendaModel salvar(@RequestBody @Valid ProdutoEncomenda encomenda) {
         return produtoEncomendaMapper.toProdutoEncomendaModel(cadastroProdutoEncomenda.salvar(encomenda));
     }
 
     @PutMapping("/{id}")
     public ProdutoEncomendaModel atualizar(
         @PathVariable("id") Long id,
-        @RequestBody ProdutoEncomenda encomenda
+        @RequestBody @Valid ProdutoEncomenda encomenda
     ) {
         ProdutoEncomenda produtoEncomendaSalvo = cadastroProdutoEncomenda.buscarOuFalhar(id);
 
