@@ -1,5 +1,7 @@
 package br.com.rodolfo.biscoiteria.domain.model;
 
+import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,12 +35,18 @@ public class Pedido {
     private Long id;
 
     @CreationTimestamp
-    @Column(nullable = false)
-    private OffsetDateTime dataCriacao;
+    @Column(columnDefinition = "date")
+    private LocalDate dataCriacao;
 
     private OffsetDateTime dataCancelamento;
 
     private OffsetDateTime dataPagamento;
+
+    @Column(nullable = false)
+    private BigDecimal precoTotal;
+
+    @Column(nullable = false)
+    private BigDecimal lucroTotal;
 
     @ManyToOne
     @JoinColumn(name = "usuario_cliente_id", nullable = false)
@@ -54,4 +62,24 @@ public class Pedido {
 
     @OneToMany(mappedBy = "pedido")
     private List<PedidoItem> itens = new ArrayList<>();
+
+    public void atribuirPedidoAosItens() {
+        getItens().forEach(item -> item.setPedido(this));
+    }
+
+    public void calcularValorTotal() {
+        BigDecimal total = getItens().stream()
+            .map(PedidoItem::getPrecoTotal)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        setPrecoTotal(total);
+    }
+
+    public void calcularLucroTotal() {
+        BigDecimal total = getItens().stream()
+            .map(PedidoItem::getLucro)
+            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+        setLucroTotal(total);
+    }
 }

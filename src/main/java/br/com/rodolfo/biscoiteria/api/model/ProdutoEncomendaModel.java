@@ -1,7 +1,7 @@
 package br.com.rodolfo.biscoiteria.api.model;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
@@ -21,7 +21,7 @@ public class ProdutoEncomendaModel {
 
     private BigDecimal precoCompra;
 
-    private OffsetDateTime dataCadastro;
+    private LocalDate dataCadastro;
 
     private ProdutoIdModel produto;
 }

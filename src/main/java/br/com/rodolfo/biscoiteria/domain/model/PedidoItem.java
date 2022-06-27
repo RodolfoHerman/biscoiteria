@@ -1,6 +1,7 @@
 package br.com.rodolfo.biscoiteria.domain.model;
 
 import java.math.BigDecimal;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -29,6 +30,15 @@ public class PedidoItem {
     @Column(nullable = false)
     private BigDecimal preco;
 
+    @Column(nullable = false)
+    private BigDecimal precoTotal;
+
+    @Column(nullable = false)
+    private BigDecimal precoCompraProduto;
+
+    @Column(nullable = false)
+    private BigDecimal lucro;
+
     @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;
@@ -36,4 +46,31 @@ public class PedidoItem {
     @ManyToOne
     @JoinColumn(name = "pedido_id", nullable = false)
     private Pedido pedido;
+
+    public void calcularValorTotal() {
+        BigDecimal precoProduto = Optional.ofNullable(getPreco())
+            .orElse(BigDecimal.ZERO);
+
+        BigDecimal qtd = Optional.ofNullable(getQuantidade())
+            .map(BigDecimal::valueOf)
+            .orElse(BigDecimal.ZERO);
+
+        setPrecoTotal(precoProduto.multiply(qtd));
+    }
+
+    public void calcularLucroTotal() {
+        BigDecimal precoCompra = Optional.ofNullable(getPrecoCompraProduto())
+            .orElse(BigDecimal.ZERO);
+
+        BigDecimal precoVenda = Optional.ofNullable(getPreco())
+            .orElse(BigDecimal.ZERO);
+
+        BigDecimal qtd = Optional.ofNullable(getQuantidade())
+            .map(BigDecimal::valueOf)
+            .orElse(BigDecimal.ZERO);
+
+        BigDecimal lucroParcial = precoVenda.subtract(precoCompra);
+
+        setLucro(lucroParcial.multiply(qtd));
+    }
 }

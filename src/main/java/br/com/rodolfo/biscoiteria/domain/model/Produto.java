@@ -1,8 +1,10 @@
 package br.com.rodolfo.biscoiteria.domain.model;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -43,13 +45,18 @@ public class Produto {
     @Column(nullable = false)
     private String descricao;
 
-    // @Column(nullable = false)
-    // private Integer quantidadeEstoque;
+    private Integer quantidadeEstoque;
+
+    @Column(columnDefinition = "date")
+    private LocalDate dataEncomenda;
 
     @NotNull
     @Positive
     @Column(nullable = false)
     private BigDecimal precoVenda;
+
+    @Positive
+    private BigDecimal precoCompra;
 
     @Column(nullable = false)
     private boolean ativo;
@@ -63,4 +70,17 @@ public class Produto {
 
     @OneToMany(mappedBy = "produto")
     private List<ProdutoEncomenda> encomendas = new ArrayList<>();
+
+    public void atualizarEstoque(Integer quantidade) {
+        setDataEncomenda(LocalDate.now());
+
+        Integer quantidadeAtual = Optional.ofNullable(getQuantidadeEstoque())
+            .orElse(0);
+
+        setQuantidadeEstoque(quantidadeAtual + quantidade);
+    }
+
+    public boolean quantidadeInsuficienteEmEstoque(Integer quantidadeSolicitada) {
+        return (getQuantidadeEstoque() - quantidadeSolicitada) < 0;
+    }
 }

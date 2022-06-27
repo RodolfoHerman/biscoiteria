@@ -1,7 +1,8 @@
 package br.com.rodolfo.biscoiteria.domain.model;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDate;
+import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -42,9 +43,12 @@ public class ProdutoEncomenda {
     @Column(nullable = false)
     private BigDecimal precoCompra;
 
+    @Column(nullable = false)
+    private BigDecimal precoTotal;
+
     @CreationTimestamp
-    @Column(columnDefinition = "datetime")
-    private OffsetDateTime dataCadastro;
+    @Column(columnDefinition = "date")
+    private LocalDate dataCadastro;
 
     @Valid
     @NotNull
@@ -52,4 +56,15 @@ public class ProdutoEncomenda {
     @ManyToOne
     @JoinColumn(name = "produto_id", nullable = false)
     private Produto produto;
+
+    public void calcularValorTotal() {
+        BigDecimal preco = Optional.ofNullable(getPrecoCompra())
+            .orElse(BigDecimal.ZERO);
+
+        BigDecimal qtd = Optional.ofNullable(getQuantidade())
+            .map(BigDecimal::valueOf)
+            .orElse(BigDecimal.ZERO);
+
+        setPrecoTotal(preco.multiply(qtd));
+    }
 }
