@@ -1,0 +1,1 @@
+alter table produto_categoria add constraint uk_produto_categoria_nome unique (nome);

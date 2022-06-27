@@ -17,7 +17,11 @@ public class CadastroProdutoCategoriaService {
     private ProdutoCategoriaRepository produtoCategoriaRepository;
 
     public ProdutoCategoria salvar(ProdutoCategoria produtoCategoria) {
-        return produtoCategoriaRepository.save(produtoCategoria);
+        try {
+            return produtoCategoriaRepository.save(produtoCategoria);
+        } catch (DataIntegrityViolationException ex) {
+            throw new ProdutoCategoriaEmUsoException(produtoCategoria.getNome());
+        }
     }
 
     public void excluir(Long id) {
