@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import br.com.rodolfo.biscoiteria.domain.exception.ProdutoEmUsoException;
 import br.com.rodolfo.biscoiteria.domain.exception.ProdutoNaoEncontradoException;
@@ -20,6 +21,7 @@ public class CadastroProdutoService {
     @Autowired
     private CadastroProdutoCategoriaService cadastroProdutoCategoriaService;
 
+    @Transactional
     public Produto salvar(Produto produto) {
         Long idCategoria = produto.getCategoria().getId();
 
@@ -30,6 +32,7 @@ public class CadastroProdutoService {
         return produtoRepository.save(produto);
     }
 
+    @Transactional
     public void excluir(Long id) {
         try {
             produtoRepository.deleteById(id);

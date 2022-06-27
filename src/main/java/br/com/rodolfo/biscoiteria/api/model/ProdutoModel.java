@@ -1,11 +1,8 @@
 package br.com.rodolfo.biscoiteria.api.model;
 
 import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
+import java.time.LocalDate;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
 
@@ -23,15 +20,13 @@ public class ProdutoModel {
 
     private String descricao;
 
+    private Integer quantidadeEstoque;
+
+    private LocalDate dataEncomenda;
+
     private BigDecimal precoVenda;
 
     private boolean ativo;
 
-    private ProdutoCategoriaModel categoria;
-
-    @JsonIgnoreProperties("produto")
-    private ProdutoEncomendaModel encomenda;
-
-    @JsonIgnore
-    private List<ProdutoEncomendaModel> encomendas = new ArrayList<>();
+    private String categoria;
 }

@@ -50,16 +50,14 @@ public class Produto {
     @Column(columnDefinition = "date")
     private LocalDate dataEncomenda;
 
-    @NotNull
     @Positive
-    @Column(nullable = false)
     private BigDecimal precoVenda;
 
     @Positive
     private BigDecimal precoCompra;
 
     @Column(nullable = false)
-    private boolean ativo;
+    private Boolean ativo = Boolean.TRUE;
 
     @Valid
     @NotNull

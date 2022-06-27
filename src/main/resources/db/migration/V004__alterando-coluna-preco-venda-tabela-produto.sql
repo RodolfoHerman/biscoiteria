@@ -1,0 +1,1 @@
+ALTER TABLE produto MODIFY COLUMN preco_venda DECIMAL(10,2) NULL;
