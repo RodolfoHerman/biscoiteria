@@ -4,7 +4,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -70,15 +69,19 @@ public class Produto {
     private List<ProdutoEncomenda> encomendas = new ArrayList<>();
 
     public void atualizarEstoque(Integer quantidade) {
-        setDataEncomenda(LocalDate.now());
-
-        Integer quantidadeAtual = Optional.ofNullable(getQuantidadeEstoque())
-            .orElse(0);
-
-        setQuantidadeEstoque(quantidadeAtual + quantidade);
+        setQuantidadeEstoque(quantidade);
+        ativarOuInativar();
     }
 
     public boolean quantidadeInsuficienteEmEstoque(Integer quantidadeSolicitada) {
         return (getQuantidadeEstoque() - quantidadeSolicitada) < 0;
+    }
+
+    private void ativarOuInativar() {
+        if(getQuantidadeEstoque() <= 0) {
+            setAtivo(Boolean.FALSE);
+        } else {
+            setAtivo(Boolean.TRUE);
+        }
     }
 }

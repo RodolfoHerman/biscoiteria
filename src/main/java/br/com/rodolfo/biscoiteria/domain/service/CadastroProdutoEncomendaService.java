@@ -1,5 +1,7 @@
 package br.com.rodolfo.biscoiteria.domain.service;
 
+import java.time.LocalDate;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,10 +19,7 @@ public class CadastroProdutoEncomendaService {
     @Transactional
     public ProdutoEncomenda salvar(ProdutoEncomenda produtoEncomenda) {
         produtoEncomenda.calcularValorTotal();
-
-        if(produtoEncomenda.isAtualizarEstoque()) {
-            produtoEncomenda.getProduto().atualizarEstoque(produtoEncomenda.getQuantidade());
-        }
+        produtoEncomenda.getProduto().setDataEncomenda(LocalDate.now());
 
         return produtoEncomendaRepository.save(produtoEncomenda);
     }

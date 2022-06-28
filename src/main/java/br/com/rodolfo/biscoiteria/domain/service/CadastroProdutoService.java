@@ -35,7 +35,8 @@ public class CadastroProdutoService {
     @Transactional
     public Produto atualizarEstoque(Long produtoId, Integer quantidadeEstoque) {
         Produto produto = buscarOuFalhar(produtoId);
-        produto.setQuantidadeEstoque(quantidadeEstoque);
+
+        produto.atualizarEstoque(quantidadeEstoque);
 
         return produto;
     }

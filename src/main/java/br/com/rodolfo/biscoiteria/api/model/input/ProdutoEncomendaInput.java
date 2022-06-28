@@ -23,6 +23,4 @@ public class ProdutoEncomendaInput {
     @NotNull
     @Positive
     private BigDecimal precoVenda;
-
-    private Boolean atualizarEstoque;
 }

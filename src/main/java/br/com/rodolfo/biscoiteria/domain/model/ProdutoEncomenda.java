@@ -51,9 +51,6 @@ public class ProdutoEncomenda {
     @Transient
     private BigDecimal precoVenda;
 
-    @Transient
-    private boolean atualizarEstoque;
-
     @CreationTimestamp
     @Column(columnDefinition = "date")
     private LocalDate dataCadastro;
