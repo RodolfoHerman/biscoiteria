@@ -31,3 +31,10 @@ INSERT IGNORE INTO produto_encomenda (quantidade,preco_compra,preco_total,data_c
 INSERT IGNORE INTO produto_encomenda (quantidade,preco_compra,preco_total,data_cadastro,produto_id) VALUES (10,1.75,17.5,'2022-05-26',1);
 INSERT IGNORE INTO produto_encomenda (quantidade,preco_compra,preco_total,data_cadastro,produto_id) VALUES (12,5.75,69,'2022-01-25',2);
 INSERT IGNORE INTO produto_encomenda (quantidade,preco_compra,preco_total,data_cadastro,produto_id) VALUES (8,6,48,'2022-05-26',2);
+
+INSERT IGNORE INTO permissao (id, nome, descricao) values (1, 'CONSULTAR_PRODUTOS', 'Permite consultar produtos');
+INSERT IGNORE INTO permissao (id, nome, descricao) values (2, 'EDITAR_PRODUTOS', 'Permite editar produtos');
+
+INSERT IGNORE INTO grupo (id, nome) values (1, 'Gerente'), (2, 'Vendedor'), (3, 'Secretária'), (4, 'Cadastrador');
+
+INSERT IGNORE INTO grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
