@@ -33,6 +33,14 @@ public class CadastroProdutoService {
     }
 
     @Transactional
+    public Produto atualizarEstoque(Long produtoId, Integer quantidadeEstoque) {
+        Produto produto = buscarOuFalhar(produtoId);
+        produto.setQuantidadeEstoque(quantidadeEstoque);
+
+        return produto;
+    }
+
+    @Transactional
     public void excluir(Long id) {
         try {
             produtoRepository.deleteById(id);

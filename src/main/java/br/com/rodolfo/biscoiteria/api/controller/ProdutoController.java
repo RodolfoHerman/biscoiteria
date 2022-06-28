@@ -76,6 +76,15 @@ public class ProdutoController {
         }
     }
 
+    @PutMapping("/{id}/atualizar-estoque")
+    public ProdutoModel atualizarEncomenda(
+        @PathVariable("id") Long id,
+        @RequestBody Integer quantidadeEstoque
+    ) {
+        return produtoModelMapper.toModel(
+            cadastroProdutoService.atualizarEstoque(id, quantidadeEstoque));
+    }
+
     @DeleteMapping("/{id}")
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void remover(@PathVariable("id") Long id) {

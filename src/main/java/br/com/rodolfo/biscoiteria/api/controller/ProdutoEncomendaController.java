@@ -1,68 +1,89 @@
 package br.com.rodolfo.biscoiteria.api.controller;
 
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.validation.Valid;
 
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.rodolfo.biscoiteria.api.mapper.ProdutoEncomendaInputDemapper;
+import br.com.rodolfo.biscoiteria.api.mapper.ProdutoEncomendaModelMapper;
 import br.com.rodolfo.biscoiteria.api.model.ProdutoEncomendaModel;
-import br.com.rodolfo.biscoiteria.core.mappers.ProdutoEncomendaMapper;
+import br.com.rodolfo.biscoiteria.api.model.input.ProdutoEncomendaInput;
+import br.com.rodolfo.biscoiteria.domain.model.Produto;
 import br.com.rodolfo.biscoiteria.domain.model.ProdutoEncomenda;
-import br.com.rodolfo.biscoiteria.domain.service.CadastroProdutoEncomenda;
+import br.com.rodolfo.biscoiteria.domain.repository.ProdutoEncomendaRepository;
+import br.com.rodolfo.biscoiteria.domain.service.CadastroProdutoEncomendaService;
+import br.com.rodolfo.biscoiteria.domain.service.CadastroProdutoService;
 
 @RestController
-@RequestMapping("/encomendas")
+@RequestMapping("produtos/{produto-id}/encomendas")
 public class ProdutoEncomendaController {
 
     @Autowired
-    private CadastroProdutoEncomenda cadastroProdutoEncomenda;
+    private ProdutoEncomendaRepository produtoEncomendaRepository;
 
     @Autowired
-    private ProdutoEncomendaMapper produtoEncomendaMapper;
+    private CadastroProdutoEncomendaService cadastroProdutoEncomendaService;
 
-    @GetMapping("/por-id-produto/{id}")
-    public List<ProdutoEncomendaModel> listarEncomendasPorIdProduto(@PathVariable("id") Long idProduto) {
-        List<ProdutoEncomenda> encomendas = cadastroProdutoEncomenda.listarEncomendasPorIdProduto(idProduto);
+    @Autowired
+    private CadastroProdutoService cadastroProdutoService;
 
-        return encomendas.stream()
-            .map(produtoEncomendaMapper::toProdutoEncomendaModel)
-            .collect(Collectors.toList());
+    @Autowired
+    private ProdutoEncomendaModelMapper produtoEncomendaModelMapper;
+
+    @Autowired
+    private ProdutoEncomendaInputDemapper produtoEncomendaInputDemapper;
+
+    @GetMapping
+    public List<ProdutoEncomendaModel> listar(@PathVariable("produto-id") Long produtoId) {
+        Produto produto = cadastroProdutoService.buscarOuFalhar(produtoId);
+
+        List<ProdutoEncomenda> produtoEncomendas = produtoEncomendaRepository.findByProduto(produto);
+
+        return produtoEncomendaModelMapper.toCollection(produtoEncomendas);
+    }
+
+    @GetMapping("/{encomenda-id}")
+    public ProdutoEncomendaModel buscar(
+        @PathVariable("produto-id") Long produtoId,
+        @PathVariable("encomenda-id") Long encomendaId
+    ) {
+        ProdutoEncomenda produtoEncomenda = cadastroProdutoEncomendaService.buscarOuFalhar(encomendaId, produtoId);
+
+        return produtoEncomendaModelMapper.toModel(produtoEncomenda);
     }
 
     @PostMapping
-    @ResponseStatus(value = HttpStatus.CREATED)
-    public ProdutoEncomendaModel salvar(@RequestBody @Valid ProdutoEncomenda encomenda) {
-        return produtoEncomendaMapper.toProdutoEncomendaModel(cadastroProdutoEncomenda.salvar(encomenda));
-    }
-
-    @PutMapping("/{id}")
-    public ProdutoEncomendaModel atualizar(
-        @PathVariable("id") Long id,
-        @RequestBody @Valid ProdutoEncomenda encomenda
+    public ProdutoEncomendaModel salvar(
+        @PathVariable("produto-id") Long produtoId,
+        @RequestBody @Valid ProdutoEncomendaInput produtoEncomendaInput
     ) {
-        ProdutoEncomenda produtoEncomendaSalvo = cadastroProdutoEncomenda.buscarOuFalhar(id);
+        Produto produto = cadastroProdutoService.buscarOuFalhar(produtoId);
 
-        BeanUtils.copyProperties(encomenda, produtoEncomendaSalvo, "id", "dataCadastro");
+        ProdutoEncomenda produtoEncomenda = produtoEncomendaInputDemapper.toDomainObject(produtoEncomendaInput);
+        produtoEncomenda.setProduto(produto);
 
-        return produtoEncomendaMapper.toProdutoEncomendaModel(cadastroProdutoEncomenda.salvar(produtoEncomendaSalvo));
+        return produtoEncomendaModelMapper.toModel(cadastroProdutoEncomendaService.salvar(produtoEncomenda));
     }
 
-    @DeleteMapping("/{id}")
-    @ResponseStatus(value = HttpStatus.NO_CONTENT)
-    public void remover(@PathVariable("id") Long id) {
-        cadastroProdutoEncomenda.excluir(id);
+    @PutMapping("/{encomenda-id}")
+    public ProdutoEncomendaModel atualizar(
+        @PathVariable("produto-id") Long produtoId,
+        @PathVariable("encomenda-id") Long encomendaId,
+        @RequestBody @Valid ProdutoEncomendaInput produtoEncomendaInput
+    ) {
+        ProdutoEncomenda produtoEncomenda = cadastroProdutoEncomendaService.buscarOuFalhar(encomendaId, produtoId);
+
+        produtoEncomendaInputDemapper.copyToDomainObject(produtoEncomendaInput, produtoEncomenda);
+
+        return produtoEncomendaModelMapper.toModel(cadastroProdutoEncomendaService.salvar(produtoEncomenda));
     }
 }
