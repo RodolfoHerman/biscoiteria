@@ -1,0 +1,4 @@
+ALTER TABLE usuario MODIFY COLUMN endereco_bairro VARCHAR(100) NULL;
+ALTER TABLE usuario MODIFY COLUMN endereco_complemento VARCHAR(30) NULL;
+ALTER TABLE usuario MODIFY COLUMN endereco_numero VARCHAR(15) NULL;
+ALTER TABLE usuario MODIFY COLUMN endereco_rua VARCHAR(15) NULL;

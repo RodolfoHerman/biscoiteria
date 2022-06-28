@@ -9,13 +9,13 @@ import lombok.Data;
 @Embeddable
 public class Endereco {
 
-    @Column(name = "endereco_bairro", nullable = false)
+    @Column(name = "endereco_bairro")
     private String bairro;
     
-    @Column(name = "endereco_rua", nullable = false)
+    @Column(name = "endereco_rua")
     private String rua;
 
-    @Column(name = "endereco_numero", nullable = false)
+    @Column(name = "endereco_numero")
     private String numero;
     
     @Column(name = "endereco_complemento")
