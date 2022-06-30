@@ -1,5 +1,7 @@
 package br.com.rodolfo.biscoiteria.api.controller;
 
+import javax.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +39,7 @@ public class FluxoPedidoController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void alterarStatus(
         @PathVariable("pedido-id") Long pedidoId,
-        @RequestBody PedidoStatusInput pedidoStatusInput
+        @RequestBody @Valid PedidoStatusInput pedidoStatusInput
     ) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
 
@@ -50,7 +52,7 @@ public class FluxoPedidoController {
     @ResponseStatus(value = HttpStatus.NO_CONTENT)
     public void pagamento(
         @PathVariable("pedido-id") Long pedidoId,
-        @RequestBody PedidoFormaPagamentoInput pedidoFormaPagamentoInput
+        @RequestBody @Valid PedidoFormaPagamentoInput pedidoFormaPagamentoInput
     ) {
         Pedido pedido = emissaoPedidoService.buscarOuFalhar(pedidoId);
 
