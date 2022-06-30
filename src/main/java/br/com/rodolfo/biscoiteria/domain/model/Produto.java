@@ -22,6 +22,7 @@ import javax.validation.groups.ConvertGroup;
 import javax.validation.groups.Default;
 
 import br.com.rodolfo.biscoiteria.core.validation.Groups;
+import br.com.rodolfo.biscoiteria.domain.exception.NegocioException;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 
@@ -73,8 +74,19 @@ public class Produto {
         ativarOuInativar();
     }
 
-    public boolean quantidadeInsuficienteEmEstoque(Integer quantidadeSolicitada) {
-        return (getQuantidadeEstoque() - quantidadeSolicitada) < 0;
+    public void verificarAtualizarQuantidadeEstoque(Integer quantidadeSolicitada) {
+        Integer qtdDiponivel = getQuantidadeEstoque() - quantidadeSolicitada;
+
+        if(qtdDiponivel < 0) {
+            throw new NegocioException(String.format(
+                    "O produto %s possui apenas %d em estoque, não atendendo a quatidade de %d solicitada.",
+                    getNome(),
+                    getQuantidadeEstoque(),
+                    quantidadeSolicitada
+                ));
+        }
+
+        atualizarEstoque(qtdDiponivel);
     }
 
     private void ativarOuInativar() {

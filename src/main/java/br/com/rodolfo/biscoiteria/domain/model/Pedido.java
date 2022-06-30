@@ -6,6 +6,7 @@ import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.EnumType;
@@ -19,6 +20,7 @@ import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
 
+import br.com.rodolfo.biscoiteria.domain.exception.NegocioException;
 import br.com.rodolfo.biscoiteria.domain.model.enums.FormaPagamento;
 import br.com.rodolfo.biscoiteria.domain.model.enums.PedidoStatus;
 import lombok.Data;
@@ -38,6 +40,8 @@ public class Pedido {
     @Column(columnDefinition = "date")
     private LocalDate dataCriacao;
 
+    private LocalDate dataEntrega;
+
     private OffsetDateTime dataCancelamento;
 
     private OffsetDateTime dataPagamento;
@@ -54,13 +58,15 @@ public class Pedido {
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
-    private PedidoStatus status;
+    private PedidoStatus status = PedidoStatus.PENDENTE;
 
     @Enumerated(value = EnumType.STRING)
     @Column(nullable = false)
-    private FormaPagamento formaPagamento;
+    private FormaPagamento formaPagamento = FormaPagamento.NAO_PAGO;
 
-    @OneToMany(mappedBy = "pedido")
+    private String observacao;
+
+    @OneToMany(mappedBy = "pedido", cascade = CascadeType.ALL)
     private List<PedidoItem> itens = new ArrayList<>();
 
     public void atribuirPedidoAosItens() {
@@ -81,5 +87,30 @@ public class Pedido {
             .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         setLucroTotal(total);
+    }
+
+    public void entregar() {
+        setDataEntrega(LocalDate.now());
+    }
+
+    public void cancelar() {
+        setDataCancelamento(OffsetDateTime.now());
+    }
+
+    public void pagar() {
+        setDataPagamento(OffsetDateTime.now());
+    }
+
+    public void setStatus(PedidoStatus novoStatus) {
+        if(getStatus().naoPodeAlterarPara(novoStatus)) {
+            throw new NegocioException(
+                String.format(
+                    "Status do pedido %d não pode ser alterado de %s para %s",
+                    getId(),
+                    getStatus().getDescricao(),
+                    novoStatus.getDescricao()));
+        }
+
+        this.status = novoStatus;
     }
 }

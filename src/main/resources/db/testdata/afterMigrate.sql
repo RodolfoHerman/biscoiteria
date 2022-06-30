@@ -43,3 +43,8 @@ INSERT IGNORE INTO usuario (nome, telefone, email, data_cadastro) values ('Rodol
 INSERT IGNORE INTO usuario (id, nome, telefone, email, data_cadastro, endereco_rua, endereco_numero, endereco_bairro) values (5, 'Manoel Lima', '(31)9-9999-9996', 'manoel.loja@gmail.com', utc_timestamp, 'Rua teste', '12345', 'Bairoo teste');
 
 INSERT IGNORE INTO usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 2);
+
+insert into pedido (id, usuario_cliente_id, forma_pagamento, status, data_criacao, preco_total, lucro_total) values (1, 1, 'NAO_PAGO', 'PENDENTE', '2022-05-20', 46.0, 30.5);
+
+insert into pedido_item (id, pedido_id, produto_id, quantidade, preco, preco_total, preco_compra_produto, lucro) values (1, 1, 1, 2, 8, 16, 1.75, 12.5);
+insert into pedido_item (id, pedido_id, produto_id, quantidade, preco, preco_total, preco_compra_produto, lucro) values (2, 1, 2, 2, 15, 30, 6, 18);

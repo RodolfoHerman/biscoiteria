@@ -9,6 +9,5 @@ public class UsuarioResumoModel {
 
     private Long id;
     private String nome;
-    private String telefone; 
-    private String email;
+    private String telefone;
 }

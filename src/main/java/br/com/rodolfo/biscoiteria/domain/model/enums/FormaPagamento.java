@@ -5,12 +5,7 @@ import lombok.Getter;
 @Getter
 public enum FormaPagamento {
 
-    DINHEIRO("Dinheiro"),
-    PIX("Pix");
-
-    private String descrico;
-
-    private FormaPagamento(String descricao) {
-        this.descrico = descricao;
-    }
+    NAO_PAGO,
+    DINHEIRO,
+    PIX;
 }
