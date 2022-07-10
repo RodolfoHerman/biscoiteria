@@ -19,8 +19,4 @@ public class ProdutoEncomendaInput {
     @NotNull
     @Positive
     private BigDecimal precoCompra;
-
-    @NotNull
-    @Positive
-    private BigDecimal precoVenda;
 }
