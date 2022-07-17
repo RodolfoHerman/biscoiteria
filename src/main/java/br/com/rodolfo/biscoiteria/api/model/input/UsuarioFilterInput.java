@@ -5,7 +5,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class PedidoFilterInput {
+public class UsuarioFilterInput {
 
     private String nome;
     private String telefone;

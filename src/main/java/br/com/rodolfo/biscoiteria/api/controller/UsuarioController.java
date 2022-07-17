@@ -17,16 +17,18 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.rodolfo.biscoiteria.api.mapper.UsuarioFilterInputDemapper;
 import br.com.rodolfo.biscoiteria.api.mapper.UsuarioInputDemapper;
 import br.com.rodolfo.biscoiteria.api.mapper.UsuarioModelMapper;
 import br.com.rodolfo.biscoiteria.api.mapper.UsuarioResumoModelMapper;
 import br.com.rodolfo.biscoiteria.api.model.UsuarioModel;
 import br.com.rodolfo.biscoiteria.api.model.UsuarioResumoModel;
+import br.com.rodolfo.biscoiteria.api.model.input.UsuarioFilterInput;
 import br.com.rodolfo.biscoiteria.api.model.input.UsuarioInput;
+import br.com.rodolfo.biscoiteria.domain.filter.UsuarioFilter;
 import br.com.rodolfo.biscoiteria.domain.model.Usuario;
 import br.com.rodolfo.biscoiteria.domain.repository.UsuarioRepository;
 import br.com.rodolfo.biscoiteria.domain.service.CadastroUsuarioService;
@@ -51,12 +53,17 @@ public class UsuarioController {
     @Autowired
     private UsuarioInputDemapper usuarioInputDemapper;
 
+    @Autowired
+    private UsuarioFilterInputDemapper usuarioFilterInputDemapper;
+
     @GetMapping
     public Page<UsuarioResumoModel> listar(
-        @RequestParam(required = false) String nome,
+        UsuarioFilterInput usuarioFilterInput,
         @PageableDefault(size = 10) Pageable pageable
     ) {
-        Page<Usuario> usuariosPage = usuarioRepository.findAll(UsuarioSpecs.comNomeSemelhante(nome), pageable);
+        UsuarioFilter filtro = usuarioFilterInputDemapper.toDomainObject(usuarioFilterInput);
+
+        Page<Usuario> usuariosPage = usuarioRepository.findAll(UsuarioSpecs.usandoFiltro(filtro), pageable);
 
         List<UsuarioResumoModel> usuarios = usuarioResumoModelMapper
             .toCollection(usuariosPage.getContent());

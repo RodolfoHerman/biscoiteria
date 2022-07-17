@@ -7,7 +7,6 @@ import lombok.Setter;
 @Setter
 public class PedidoFilter {
 
-    private String filtro;
     private String nome;
     private String telefone;
 }

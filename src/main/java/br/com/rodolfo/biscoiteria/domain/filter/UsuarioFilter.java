@@ -1,11 +1,11 @@
-package br.com.rodolfo.biscoiteria.api.model.input;
+package br.com.rodolfo.biscoiteria.domain.filter;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class PedidoFilterInput {
+public class UsuarioFilter {
 
     private String nome;
     private String telefone;
