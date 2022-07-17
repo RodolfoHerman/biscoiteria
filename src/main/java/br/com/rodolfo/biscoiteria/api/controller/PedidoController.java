@@ -18,18 +18,22 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
+import br.com.rodolfo.biscoiteria.api.mapper.PedidoFilterInputDemapper;
 import br.com.rodolfo.biscoiteria.api.mapper.PedidoInputDemapper;
 import br.com.rodolfo.biscoiteria.api.mapper.PedidoModelMapper;
 import br.com.rodolfo.biscoiteria.api.mapper.PedidoResumoModelMapper;
 import br.com.rodolfo.biscoiteria.api.model.PedidoModel;
 import br.com.rodolfo.biscoiteria.api.model.PedidoResumoModel;
+import br.com.rodolfo.biscoiteria.api.model.input.PedidoFilterInput;
 import br.com.rodolfo.biscoiteria.api.model.input.PedidoInput;
 import br.com.rodolfo.biscoiteria.domain.exception.EntidadeNaoEncontradaException;
 import br.com.rodolfo.biscoiteria.domain.exception.NegocioException;
+import br.com.rodolfo.biscoiteria.domain.filter.PedidoFilter;
 import br.com.rodolfo.biscoiteria.domain.model.Pedido;
 import br.com.rodolfo.biscoiteria.domain.model.Usuario;
 import br.com.rodolfo.biscoiteria.domain.repository.PedidoRepository;
 import br.com.rodolfo.biscoiteria.domain.service.EmissaoPedidoService;
+import br.com.rodolfo.biscoiteria.infrastructure.repository.spec.PedidoSpecs;
 
 @RestController
 @RequestMapping("/pedidos")
@@ -50,9 +54,17 @@ public class PedidoController {
     @Autowired
     private PedidoResumoModelMapper pedidoResumoModelMapper;
 
+    @Autowired
+    private PedidoFilterInputDemapper pedidoFilterInputDemapper;
+
     @GetMapping
-    public Page<PedidoResumoModel> listar(@PageableDefault(size = 10) Pageable pageable) {
-        Page<Pedido> pedidosPage = pedidoRepository.findAll(pageable);
+    public Page<PedidoResumoModel> listar(
+        PedidoFilterInput pedidoFilterInput,
+        @PageableDefault(size = 10) Pageable pageable
+    ) {
+        PedidoFilter filtro = pedidoFilterInputDemapper.toDomainObject(pedidoFilterInput);
+
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(PedidoSpecs.usandoFiltro(filtro), pageable);
 
         List<PedidoResumoModel> pedidos = pedidoResumoModelMapper
             .toCollection(pedidosPage.getContent());
@@ -77,7 +89,7 @@ public class PedidoController {
             Pedido pedido = pedidoInputDemapper.toDomainObject(pedidoInput);
 
             Usuario usuario = new Usuario();
-            usuario.setId(1L);
+            usuario.setId(2L);
 
             pedido.setCliente(usuario);
 
