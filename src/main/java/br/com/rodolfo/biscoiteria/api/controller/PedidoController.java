@@ -5,6 +5,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -47,8 +51,16 @@ public class PedidoController {
     private PedidoResumoModelMapper pedidoResumoModelMapper;
 
     @GetMapping
-    public List<PedidoResumoModel> listar() {
-        return pedidoResumoModelMapper.toCollection(pedidoRepository.findAll());
+    public Page<PedidoResumoModel> listar(@PageableDefault(size = 10) Pageable pageable) {
+        Page<Pedido> pedidosPage = pedidoRepository.findAll(pageable);
+
+        List<PedidoResumoModel> pedidos = pedidoResumoModelMapper
+            .toCollection(pedidosPage.getContent());
+
+        Page<PedidoResumoModel> pedidosResumoModelPage = new PageImpl<>(pedidos, pageable, 
+            pedidosPage.getTotalElements());
+
+        return pedidosResumoModelPage;
     }
 
     @GetMapping("/{pedido-id}")

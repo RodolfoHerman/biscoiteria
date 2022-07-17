@@ -5,6 +5,10 @@ import java.util.List;
 import javax.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -45,12 +49,22 @@ public class ProdutoEncomendaController {
     private ProdutoEncomendaInputDemapper produtoEncomendaInputDemapper;
 
     @GetMapping
-    public List<ProdutoEncomendaModel> listar(@PathVariable("produto-id") Long produtoId) {
+    public Page<ProdutoEncomendaModel> listar(
+        @PathVariable("produto-id") Long produtoId,
+        @PageableDefault(size = 10) Pageable pageable
+    ) {
         Produto produto = cadastroProdutoService.buscarOuFalhar(produtoId);
 
-        List<ProdutoEncomenda> produtoEncomendas = produtoEncomendaRepository.findByProduto(produto);
+        Page<ProdutoEncomenda> produtoEncomendasPage = produtoEncomendaRepository
+            .findByProduto(produto, pageable);
 
-        return produtoEncomendaModelMapper.toCollection(produtoEncomendas);
+        List<ProdutoEncomendaModel> produtoEncomendas = produtoEncomendaModelMapper
+            .toCollection(produtoEncomendasPage.getContent());
+
+        Page<ProdutoEncomendaModel> produtosEncomendasModelPage = new PageImpl<>(produtoEncomendas, pageable,
+            produtoEncomendasPage.getTotalElements());
+
+        return produtosEncomendasModelPage;
     }
 
     @GetMapping("/{encomenda-id}")
