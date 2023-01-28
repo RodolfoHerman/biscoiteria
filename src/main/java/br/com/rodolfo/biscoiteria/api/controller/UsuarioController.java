@@ -68,10 +68,8 @@ public class UsuarioController {
         List<UsuarioResumoModel> usuarios = usuarioResumoModelMapper
             .toCollection(usuariosPage.getContent());
 
-        Page<UsuarioResumoModel> usuariosResumoModelPage = new PageImpl<>(usuarios, pageable,
+        return new PageImpl<>(usuarios, pageable,
             usuariosPage.getTotalElements());
-
-        return usuariosResumoModelPage;
     }
 
     @GetMapping("/{usuario-id}")

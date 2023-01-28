@@ -61,10 +61,8 @@ public class ProdutoEncomendaController {
         List<ProdutoEncomendaModel> produtoEncomendas = produtoEncomendaModelMapper
             .toCollection(produtoEncomendasPage.getContent());
 
-        Page<ProdutoEncomendaModel> produtosEncomendasModelPage = new PageImpl<>(produtoEncomendas, pageable,
+        return new PageImpl<>(produtoEncomendas, pageable,
             produtoEncomendasPage.getTotalElements());
-
-        return produtosEncomendasModelPage;
     }
 
     @GetMapping("/{encomenda-id}")
