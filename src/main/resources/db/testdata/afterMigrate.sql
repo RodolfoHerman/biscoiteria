@@ -10,6 +10,7 @@ DELETE FROM produto_categoria;
 DELETE FROM produto_encomenda; 
 DELETE FROM usuario; 
 DELETE FROM usuario_grupo;
+DELETE FROM produto_foto;
 
 set foreign_key_checks = 1;
 
