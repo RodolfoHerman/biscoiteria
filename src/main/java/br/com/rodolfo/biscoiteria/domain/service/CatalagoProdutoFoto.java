@@ -15,6 +15,12 @@ public class CatalagoProdutoFoto {
 
     @Transactional
     public ProdutoFoto salvar(ProdutoFoto foto) {
+        var fotoExistente = produtoRepository.findFotoByProdutoId(
+            foto.getProduto().getId());
+
+        fotoExistente.ifPresent(existente ->
+            produtoRepository.delete(existente));
+
         return produtoRepository.save(foto);
     }
 }
