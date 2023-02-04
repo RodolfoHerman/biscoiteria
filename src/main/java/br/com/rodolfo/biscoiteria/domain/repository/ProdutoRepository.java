@@ -9,7 +9,7 @@ import org.springframework.data.repository.query.Param;
 
 import br.com.rodolfo.biscoiteria.domain.model.Produto;
 
-public interface ProdutoRepository extends JpaRepository<Produto, Long>, JpaSpecificationExecutor<Produto> {
+public interface ProdutoRepository extends JpaRepository<Produto, Long>, JpaSpecificationExecutor<Produto>, ProdutoRepositoryQueries {
 
     @Query("from Produto p inner join p.categoria where p.id = :id")
     Optional<Produto> findById(@Param("id") Long id);
