@@ -1,5 +1,6 @@
 package br.com.rodolfo.biscoiteria.api.controller;
 
+import java.io.IOException;
 import java.util.List;
 
 import javax.validation.Valid;
@@ -21,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import br.com.rodolfo.biscoiteria.api.mapper.ProdutoFotoInputDemapper;
 import br.com.rodolfo.biscoiteria.api.mapper.ProdutoFotoModelMapper;
@@ -125,13 +127,15 @@ public class ProdutoController {
     public ProdutoFotoModel atualizarFoto(
         @PathVariable("id") Long id,
         @Valid ProdutoFotoInput produtoFotoInput
-    ) {
+    ) throws IOException {
         Produto produto = cadastroProdutoService.buscarOuFalhar(id);
 
+        MultipartFile multipartFile = produtoFotoInput.getArquivo();
+
         var foto = produtoFotoInputDemapper.toDomainObject(
-            produto, produtoFotoInput.getArquivo());
+            produto, multipartFile);
 
         return produtoFotoModelMapper.toModel(
-            catalagoProdutoFoto.salvar(foto));
+            catalagoProdutoFoto.salvar(foto, multipartFile.getInputStream()));
     }
 }
