@@ -1,5 +1,6 @@
 package br.com.rodolfo.biscoiteria.infrastructure.service.storage;
 
+import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
@@ -36,6 +37,15 @@ public class LocalFotoStorageService implements FotoStorageService {
             Files.deleteIfExists(path);
         } catch (Exception ex) {
             throw new StorageException("Não foi possível excluir arquivo.", ex);
+        }
+    }
+
+    @Override
+    public InputStream recuperar(String nomeArquivo) {
+        try {
+            return Files.newInputStream(getArquivoPath(nomeArquivo));
+        } catch (Exception ex) {
+            throw new StorageException("Não foi possível recuperar o arquivo.", ex);
         }
     }
 

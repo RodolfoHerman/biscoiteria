@@ -138,4 +138,10 @@ public class ProdutoController {
         return produtoFotoModelMapper.toModel(
             catalagoProdutoFoto.salvar(foto, multipartFile.getInputStream()));
     }
+
+    @GetMapping("/{id}/foto")
+    public ProdutoFotoModel buscarProdutoFoto(@PathVariable("id") Long id) {
+        return produtoFotoModelMapper.toModel(
+            catalagoProdutoFoto.buscarOuFalhar(id));
+    }
 }
