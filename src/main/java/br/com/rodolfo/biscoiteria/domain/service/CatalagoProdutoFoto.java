@@ -46,6 +46,16 @@ public class CatalagoProdutoFoto {
         return foto;
     }
 
+    @Transactional
+    public void excluir(Long id) {
+        var foto = buscarOuFalhar(id);
+
+        produtoRepository.delete(foto);
+        produtoRepository.flush();
+
+        fotoStorageService.remover(foto.getNomeArquivo());
+    }
+
     public ProdutoFoto buscarOuFalhar(long produtoId) {
         return produtoRepository.findFotoByProdutoId(produtoId)
             .orElseThrow(() -> new ProdutoFotoNaoEncontradoException(produtoId));
