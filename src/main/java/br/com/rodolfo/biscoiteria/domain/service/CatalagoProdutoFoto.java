@@ -38,6 +38,8 @@ public class CatalagoProdutoFoto {
 
         NovaFoto novaFoto = NovaFoto.builder()
             .nomeArquivo(foto.getNomeArquivo())
+            .contentType(foto.getContentType())
+            .contentLength(foto.getTamanho())
             .inputStream(stream)
         .build();
 

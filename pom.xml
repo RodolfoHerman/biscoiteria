@@ -16,6 +16,7 @@
 	<properties>
 		<java.version>11</java.version>
 		<org.mapstruct.version>1.4.2.Final</org.mapstruct.version>
+		<aws-java-sdk-s3.version>1.12.415</aws-java-sdk-s3.version>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -68,6 +69,11 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-configuration-processor</artifactId>
 			<optional>true</optional>
+		</dependency>
+		<dependency>
+			<groupId>com.amazonaws</groupId>
+			<artifactId>aws-java-sdk-s3</artifactId>
+			<version>${aws-java-sdk-s3.version}</version>
 		</dependency>
 	</dependencies>
 
