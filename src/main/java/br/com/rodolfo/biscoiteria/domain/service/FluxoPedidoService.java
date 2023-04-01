@@ -7,12 +7,16 @@ import org.springframework.transaction.annotation.Transactional;
 import br.com.rodolfo.biscoiteria.domain.model.Pedido;
 import br.com.rodolfo.biscoiteria.domain.model.Produto;
 import br.com.rodolfo.biscoiteria.domain.model.enums.PedidoStatus;
+import br.com.rodolfo.biscoiteria.domain.service.EnvioEmailService.Mensagem;
 
 @Service
 public class FluxoPedidoService {
 
     @Autowired
     private CadastroProdutoService cadastroProdutoService;
+
+    @Autowired
+    private EnvioEmailService envioEmailService;
 
     @Transactional
     public void alterarStatus(Pedido pedido) {
@@ -29,6 +33,15 @@ public class FluxoPedidoService {
     @Transactional
     public void pagar(Pedido pedido) {
         pedido.pagar();
+
+        var mensagem = Mensagem.builder()
+            .assunto("Pedido pago")
+            .corpo("pedido-pago.html")
+            .varialvel("pedido", pedido)
+            .destinatario(pedido.getCliente().getEmail())
+        .build();
+
+        envioEmailService.enviar(mensagem);
     }
 
     private void validarPedidoCancelamento(Pedido pedido) {

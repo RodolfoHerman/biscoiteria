@@ -40,7 +40,7 @@ INSERT IGNORE INTO grupo (id, nome) values (1, 'Gerente'), (2, 'Vendedor'), (3, 
 
 INSERT IGNORE INTO grupo_permissao (grupo_id, permissao_id) values (1, 1), (1, 2), (2, 1), (2, 2), (3, 1);
 
-INSERT IGNORE INTO usuario (nome, telefone, email, data_cadastro) values ('Rodolfo Herman', '(31)9-9999-9999', 'email@email.com', utc_timestamp), ('Rafael Felipe', '(31)9-9999-9998', 'teste@email.com', utc_timestamp), ('Daniel Dias', '(31)9-9999-9997', 'outro@email.com', utc_timestamp);
+INSERT IGNORE INTO usuario (nome, telefone, email, data_cadastro) values ('Rodolfo Herman', '(31)9-9999-9999', 'ciencia.rodolfo@gmail.com', utc_timestamp), ('Rafael Felipe', '(31)9-9999-9998', 'teste@email.com', utc_timestamp), ('Daniel Dias', '(31)9-9999-9997', 'outro@email.com', utc_timestamp);
 INSERT IGNORE INTO usuario (id, nome, telefone, email, data_cadastro, endereco_rua, endereco_numero, endereco_bairro) values (5, 'Manoel Lima', '(31)9-9999-9996', 'manoel.loja@gmail.com', utc_timestamp, 'Rua teste', '12345', 'Bairoo teste');
 
 INSERT IGNORE INTO usuario_grupo (usuario_id, grupo_id) values (1, 1), (1, 2), (2, 2);
