@@ -19,7 +19,11 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 
 import org.hibernate.annotations.CreationTimestamp;
+import org.springframework.data.domain.AbstractAggregateRoot;
 
+import br.com.rodolfo.biscoiteria.domain.event.PedidoCanceladoEvent;
+import br.com.rodolfo.biscoiteria.domain.event.PedidoEntregueEvent;
+import br.com.rodolfo.biscoiteria.domain.event.PedidoPagoEvent;
 import br.com.rodolfo.biscoiteria.domain.exception.NegocioException;
 import br.com.rodolfo.biscoiteria.domain.model.enums.FormaPagamento;
 import br.com.rodolfo.biscoiteria.domain.model.enums.PedidoStatus;
@@ -28,8 +32,8 @@ import lombok.EqualsAndHashCode;
 
 @Data
 @Entity
-@EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class Pedido {
+@EqualsAndHashCode(onlyExplicitlyIncluded = true, callSuper = false)
+public class Pedido extends AbstractAggregateRoot<Pedido> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -91,14 +95,20 @@ public class Pedido {
 
     public void entregar() {
         setDataEntrega(LocalDate.now());
+
+        registerEvent(new PedidoEntregueEvent(this));
     }
 
     public void cancelar() {
         setDataCancelamento(OffsetDateTime.now());
+
+        registerEvent(new PedidoCanceladoEvent(this));
     }
 
     public void pagar() {
         setDataPagamento(OffsetDateTime.now());
+
+        registerEvent(new PedidoPagoEvent(this));
     }
 
     public void setStatus(PedidoStatus novoStatus) {
